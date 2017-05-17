@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Baldon</title>
+
+    <!-- Bootstrap -->
+    <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- CSS Animation -->
+    <link href="../bootstrap/css/animate.css" rel="stylesheet">
+
+    <!-- CSS Bootstrap Table -->
+    <link href="../bootstrap/css/bootstrap-table.min.css" rel="stylesheet">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="../bootstrap/js/jquery-1.11.1.min.js"></script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../bootstrap/js/bootstrap.min.js"></script>
+
+    <!--Script per le notifiche -->
+    <script src="../bootstrap/js/bootstrap-notify.min.js"></script>
+
+    <!--Script per le Table -->
+    <script src="../bootstrap/js/bootstrap-table.min.js"></script>
+    <script src="../bootstrap/js/bootstrap-table-it-IT.min.js"></script>
+
+
+    <script type="text/javascript" language="JavaScript">
+        $(document).ready(function () {
+            $('#loading').hide();
+            $("#veri").click(function () {
+                var checkerror = true;
+                if ($('#oggetto').val() == "" && $('#qty').val() == "") {
+                    checkerror = false;
+                    tabindex = 1;
+                    $("[TabIndex='1']").focus();
+                    $.notify({
+                        // options
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        message: 'Inserire Codice e Quantità'.replace("&#39;", "\'"),
+                    }, {
+                        type: 'info',
+                        delay: 15,
+                        placement: {
+                            from: "bottom",
+                            align: "center"
+                        },
+                        animate: {
+                            enter: 'animated lightSpeedIn',
+                            exit: 'animated lightSpeedOut'
+                        },
+                    });
+                }
+                if ($('#oggetto').val() == "" && checkerror){
+                    checkerror = false;
+                    tabindex = 1;
+                    $("[TabIndex='1']").focus();
+                    $.notify({
+                        // options
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        message: 'Inserire Codice'.replace("&#39;", "\'"),
+                    }, {
+                        type: 'info',
+                        delay: 15,
+                        placement: {
+                            from: "bottom",
+                            align: "center"
+                        },
+                        animate: {
+                            enter: 'animated lightSpeedIn',
+                            exit: 'animated lightSpeedOut'
+                        },
+                    });
+                }
+                if ($('#qty').val() == "" && checkerror){
+                    checkerror = false;
+                    tabindex = 1;
+                    $("[TabIndex='1']").focus();
+                    $.notify({
+                        // options
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        message: 'Inserire una quantità'.replace("&#39;", "\'"),
+                    }, {
+                        type: 'info',
+                        delay: 15,
+                        placement: {
+                            from: "bottom",
+                            align: "center"
+                        },
+                        animate: {
+                            enter: 'animated lightSpeedIn',
+                            exit: 'animated lightSpeedOut'
+                        },
+                    });
+                }
+                if (isNaN($('#qty').val()) && checkerror){
+                    checkerror = false;
+                    tabindex = 1;
+                    $("[TabIndex='1']").focus();
+                    $.notify({
+                        // options
+                        icon: 'glyphicon glyphicon-warning-sign',
+                        message: 'Inserire un valore numerico'.replace("&#39;", "\'"),
+                    }, {
+                        type: 'info',
+                        delay: 15,
+                        placement: {
+                            from: "bottom",
+                            align: "center"
+                        },
+                        animate: {
+                            enter: 'animated lightSpeedIn',
+                            exit: 'animated lightSpeedOut'
+                        },
+                    });
+                }
+                if (checkerror) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/ver/verifica",
+                        beforeSend: function () {
+                            $('#bd').addClass("loading");
+                        },
+                        complete: function () {
+                            $('#bd').removeClass("loading");
+                        },
+                        data: "oggetto=" + $('#oggetto').val() + "&qty=" + $('#qty').val(),
+                        success: function (data) {
+
+                        },
+                        error: function () {
+
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <style>
+        .vertical-center {
+            min-height: 100%; /* Fallback for browsers do NOT support vh unit */
+            min-height: 100vh; /* These two lines are counted as one :-)       */
+            background-color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .jumbotron {
+            background-color: white;
+        }
+
+        #modalloading {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(255, 255, 255, .8) url('../images/ProCircle.gif') 50% 50% no-repeat;
+        }
+
+        /* When the body has the loading class, we turn
+           the scrollbar off with overflow:hidden */
+        body.loading {
+            overflow: hidden;
+        }
+
+        /* Anytime the body has the loading class, our
+           modal element will be visible */
+        body.loading #modalloading {
+            display: block;
+        }
+
+        /*gestione tabella*/
+
+
+    </style>
+
+</head>
+
+<body id="bd">
+<!-- Top content -->
+<div class="jumbotron">
+
+    <div class="container">
+        <div class="row text-center">
+            <h1 style="margin-top: 50px;"></h1>
+            <img src="../images/logo.png" class="img-responsive center-block" alt="">
+        </div>
+        <div class="row text-center">
+            <h2 style="margin-top: 30px;margin-bottom:0px;">Verifica Magazzino</h2>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-sm-offset-2 col-md-offset-2">
+                <div class="panel-body text-center" style="background-color:white;border:0px;">
+                    <h1 style="margin-top: 20px;"></h1>
+
+                    <form name="search" role="form">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4 col-md-3 col-md-offset-3">
+                                <div class="form-group">
+                                    <input type="text" name="oggetto" maxlength="30" id="oggetto"
+                                           tabindex="1" class="form-control input-md"
+                                           placeholder="Oggetto">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <div class="form-group">
+                                    <input type="text" name="qty" maxlength="100" id="qty"
+                                           tabindex="2" class="form-control input-md"
+                                           placeholder="Quantità">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row" style="padding:0px;border:0px;">
+                        <button type="button" class="btn btn-link btn-lg" id="veri"
+                                style="color:red">VERIFICA
+                        </button>
+                    </div>
+                    <div class="row">
+                        <h1></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding:0px;border:0px;" id="rowtable">
+            <div class="table-responsive">
+                <table id="tableresult" class="table table-responsive table-fixedheader table-bordered table-striped">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="modalloading"><!-- Place at bottom of page --></div>
+</body>
+</html>
